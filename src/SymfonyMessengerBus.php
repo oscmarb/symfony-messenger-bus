@@ -40,7 +40,7 @@ class SymfonyMessengerBus
         );
     }
 
-    public function handle(mixed $data): void
+    public function dispatch(mixed $data): void
     {
         try {
             $this->bus->dispatch($data);
