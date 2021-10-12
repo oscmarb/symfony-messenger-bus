@@ -1,0 +1,22 @@
+{
+  "name": "oscmarb/symfony-messenger-bus",
+  "authors": [
+    {
+      "name": "Óscar Martínez Benítez",
+      "email": "oscmarb@gmail.com"
+    }
+  ],
+  "description": "Symfony messenger bus",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": "^8.0",
+    "oscmarb/ddd-cqrs": "^1.0",
+    "symfony/messenger": "^4.4 | ^5.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "Oscmarb\\MessengerBus\\": "src/"
+    }
+  }
+}
