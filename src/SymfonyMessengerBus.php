@@ -10,6 +10,7 @@ use Symfony\Component\Messenger\Handler\HandlersLocator;
 use Symfony\Component\Messenger\MessageBus;
 use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
 
 class SymfonyMessengerBus
 {
@@ -40,22 +41,17 @@ class SymfonyMessengerBus
         );
     }
 
-    public function dispatch(mixed $data): void
+    public function dispatch(mixed $data): mixed
     {
         try {
-            $this->bus->dispatch($data);
+            /** @var ?HandledStamp $stamp */
+            $stamp = $this->bus->dispatch($data)->last(HandledStamp::class);
+
+            return $stamp?->getResult();
         } catch (NoHandlerForMessageException $exception) {
-            if (true === $this->expectsHandlers) {
-                throw $this->noHandlerForMessageException($data) ?? $exception;
-            }
+            throw $this->noHandlerForMessageException($data) ?? $exception;
         } catch (\Throwable $exception) {
-            $prevException = $exception->getPrevious() ?? $exception;
-
-            if (true === $prevException instanceof NoHandlerForMessageException && false === $this->expectsHandlers) {
-                return;
-            }
-
-            throw $prevException;
+            throw $exception->getPrevious() ?? $exception;
         }
     }
 
